@@ -1,0 +1,488 @@
+openapi: "3.0.2"
+info:
+  title: API Mon Vieux Grimoire
+  version: "1.0"
+servers:
+  - url: http://localhost/v1
+components:
+  securitySchemes:
+    BearerAuth:
+      type: "http"
+      description: "JWT token"
+      scheme: "bearer"
+      bearerFormat: "JWT"
+  schemas:
+    ReqAuth:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+      required:
+        - "email"
+        - "password"
+    ReqBook:
+      type: "object"
+      properties:
+        book:
+          type: "string"
+        image:
+          type: "string"
+          format: "image file"
+      required:
+        - "book"
+        - "image"
+    ReqBookNoImage:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        author:
+          type: "string"
+        year:
+          type: "integer"
+        genre:
+          type: "string"
+        rating:
+          type: "integer"
+          minimum: 0
+          maximum: 5
+      required:
+        - "title"
+        - "author"
+        - "year"
+        - "genre"
+        - "rating"
+    ReqBookRating:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+        rating:
+          type: "integer"
+      required:
+        - "userId"
+        - "rating"
+    ResBook:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+        title:
+          type: "string"
+        author:
+          type: "string"
+        imageUrl:
+          type: "string"
+        year:
+          type: "integer"
+        genre:
+          type: "string"
+        ratings:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              userId:
+                type: "string"
+              grade:
+                type: "integer"
+                minimum: 0
+                maximum: 5
+        averageRating:
+          type: "number"
+    ResMessage:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+paths:
+  /auth/signup:
+    post:
+      description: "Hash user password, add user to database."
+      tags:
+        - "Authentication"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReqAuth"
+            example:
+              email: "name@email.com"
+              password: "h69fj-4ir_$c"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              example:
+                message: "User created with success"
+        "400":
+          description: "Bad Request"
+  /auth/login:
+    post:
+      description: "Verify user authentication information. Return a user id and a JWT token containing the user id."
+      tags:
+        - "Authentication"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReqAuth"
+            example:
+              email: "name@email.com"
+              password: "h69fj-4ir_$c"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                properties:
+                  userId:
+                    type: "string"
+                  token:
+                    type: "string"
+              example:
+                userId: "1"
+                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcklkIjoiMTIzNDU2Nzg5MCIsImlhdCI6MTUxNjIzOTAyMn0.ucmoWv71urpQ9-YRDbU8udH7ZNFAf2ddFbb_hF3dgM0"
+        "400":
+          description: "Bad Request"
+  /books:
+    get:
+      description: "Return an array with all the books."
+      tags:
+        - "Books"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  $ref: "#/components/schemas/ResBook"
+              example:
+                - userId: "1"
+                  title: "Foundation"
+                  author: "Isaac Asimov"
+                  imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/25/Foundation_gnome.jpg"
+                  year: 1951
+                  genre: "Science fiction"
+                  rating:
+                    - userId: "1"
+                      grade: 5
+                    - userId: "2"
+                      grade: 4
+                    - userId: "3"
+                      grade: 4
+                  averageRating: 4.3
+                - userId: "2"
+                  title: "The Fellowship of the Ring"
+                  author: "J. R. R. Tolkien"
+                  imageUrl: "https://m.media-amazon.com/images/I/31e1rLilB3L._SY445_SX342_.jpg"
+                  year: 1954
+                  genre: "Fantasy"
+                  rating:
+                    - userId: "2"
+                      grade: 4
+                    - userId: "3"
+                      grade: 5
+                    - userId: "1"
+                      grade: 5
+                  averageRating: 4.6
+                - userId: "1"
+                  title: "The Call of the Wild"
+                  author: "Jack London"
+                  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/26/JackLondoncallwild.jpg"
+                  year: 1903
+                  genre: "Adventure"
+                  rating:
+                    - userId: "1"
+                      grade: 4
+                    - userId: "3"
+                      grade: 5
+                    - userId: "2"
+                      grade: 3
+                  averageRating: 4
+                - userId: "3"
+                  title: "1984"
+                  author: "George Orwell"
+                  imageUrl: "https://m.media-amazon.com/images/I/41aM4xOZxaL._SY445_SX342_.jpg"
+                  year: 1949
+                  genre: "Dystopian"
+                  rating:
+                    - userId: "3"
+                      grade: 5
+                    - userId: "2"
+                      grade: 5
+                    - userId: "1"
+                      grade: 5
+                  averageRating: 5
+                - userId: "1"
+                  title: "Twenty Thousand Leagues Under the Seas"
+                  author: "Jules Verne"
+                  imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Houghton_FC8_V5946_869ve_-_Verne%2C_frontispiece.jpg/330px-Houghton_FC8_V5946_869ve_-_Verne%2C_frontispiece.jpg"
+                  year: 1872
+                  genre: "Adventure"
+                  rating:
+                    - userId: "1"
+                      grade: 5
+                    - userId: "3"
+                      grade: 3
+                    - userId: "2"
+                      grade: 4
+                  averageRating: 4
+    post:
+      description: "Create a book."
+      tags:
+        - "Books"
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReqBook"
+            example:
+              book: "{'title':'Foundation','author':'Isaac Asimov','year':1951,'genre':'Science fiction','rating':5}"
+              image: "image file"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResMessage"
+              example:
+                message: "book created successfully"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+  /books/:id:
+    get:
+      description: "Return a specific book."
+      tags:
+        - "Books"
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "id of the book"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResBook"
+              example:
+                userId: "1"
+                title: "Foundation"
+                author: "Isaac Asimov"
+                imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/25/Foundation_gnome.jpg"
+                year: 1951
+                genre: "Science fiction"
+                rating:
+                  - userId: "1"
+                    grade: 5
+                  - userId: "2"
+                    grade: 4
+                  - userId: "3"
+                    grade: 4
+                averageRating: 4.3
+        "404":
+          description: "Not Found"
+    put:
+      description: "Update a book."
+      tags:
+        - "Books"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "id of the book"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReqBook"
+            examples:
+              image:
+                value:
+                  book: "{'title':'Foundation','author':'Isaac Asimov','year':1951,'genre':'Science fiction','rating':5}"
+                  image: "image file"
+              no image:
+                value:
+                  title: "Foundation"
+                  author: "Isaac Asimov"
+                  year: 1951
+                  genre: "Science fiction"
+                  rating: 5
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResMessage"
+              example:
+                message: "Book updated successfully"
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+    delete:
+      description: "Delete a book."
+      tags:
+        - "Books"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "id of the book"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResMessage"
+              example:
+                message: "Book deleted successfully"
+        "401":
+          description: "Unauthorized"
+        "403":
+          description: "Forbidden"
+        "404":
+          description: "Not Found"
+  /books/:id/rating:
+    post:
+      description: "Set a book rating between 0 and 5."
+      tags:
+        - "Books"
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: "id"
+          in: "path"
+          description: "id of the book"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReqBookRating"
+            example:
+              userId: "1"
+              rating: 5
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResBook"
+              example:
+                userId: "1"
+                title: "Foundation"
+                author: "Isaac Asimov"
+                imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/25/Foundation_gnome.jpg"
+                year: 1951
+                genre: "Science fiction"
+                rating:
+                  - userId: "1"
+                    grade: 5
+                  - userId: "2"
+                    grade: 4
+                  - userId: "3"
+                    grade: 4
+                averageRating: 4.3
+        "400":
+          description: "Bad request"
+        "401":
+          description: "Unauthorized"
+        "404":
+          description: "Not Found"
+  /books/bestrating:
+    get:
+      description: "Return an array with the 3 best rated books."
+      tags:
+        - "Books"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  type: "object"
+                  $ref: "#/components/schemas/ResBook"
+              example:
+                - userId: "3"
+                  title: "1984"
+                  author: "George Orwell"
+                  imageUrl: "https://m.media-amazon.com/images/I/41aM4xOZxaL._SY445_SX342_.jpg"
+                  year: 1949
+                  genre: "Dystopian"
+                  rating:
+                    - userId: "3"
+                      grade: 5
+                    - userId: "2"
+                      grade: 5
+                    - userId: "1"
+                      grade: 5
+                  averageRating: 5
+                - userId: "2"
+                  title: "The Fellowship of the Ring"
+                  author: "J. R. R. Tolkien"
+                  imageUrl: "https://m.media-amazon.com/images/I/31e1rLilB3L._SY445_SX342_.jpg"
+                  year: 1954
+                  genre: "Fantasy"
+                  rating:
+                    - userId: "2"
+                      grade: 4
+                    - userId: "3"
+                      grade: 5
+                    - userId: "1"
+                      grade: 5
+                  averageRating: 4.6
+                - userId: "1"
+                  title: "Foundation"
+                  author: "Isaac Asimov"
+                  imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/25/Foundation_gnome.jpg"
+                  year: 1951
+                  genre: "Science fiction"
+                  rating:
+                    - userId: "1"
+                      grade: 5
+                    - userId: "2"
+                      grade: 4
+                    - userId: "3"
+                      grade: 4
+                  averageRating: 4.3
