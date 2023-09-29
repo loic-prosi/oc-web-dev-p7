@@ -3,7 +3,7 @@ info:
   title: API Mon Vieux Grimoire
   version: "1.0"
 servers:
-  - url: http://localhost/v1
+  - url: http://localhost:4000/api
 components:
   securitySchemes:
     BearerAuth:
@@ -265,7 +265,7 @@ paths:
           description: "Bad request"
         "401":
           description: "Unauthorized"
-  /books/:id:
+  /books/{id}:
     get:
       description: "Return a specific book."
       tags:
@@ -377,7 +377,7 @@ paths:
           description: "Forbidden"
         "404":
           description: "Not Found"
-  /books/:id/rating:
+  /books/{id}/rating:
     post:
       description: "Set a book rating between 0 and 5."
       tags:
