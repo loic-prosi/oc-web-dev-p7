@@ -54,7 +54,9 @@ export const createBook = (req, res) => {
   const book = new Book({
     ...bookObj,
     userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      res.locals.fileName
+    }`
   });
   book
     .save()
@@ -93,7 +95,7 @@ export const updateBook = (req, res) => {
     ? {
         ...JSON.parse(req.body.book),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
+          res.locals.fileName
         }`
       }
     : { ...req.body };
@@ -104,14 +106,17 @@ export const updateBook = (req, res) => {
       if (book.userId !== req.auth.userId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
-        Book.updateOne(
-          { _id: req.params.id },
-          { ...bookObj, _id: req.params.id }
-        )
-          .then(() =>
-            res.status(200).json({ message: "Book updated successfully" })
+        const filename = book.imageUrl.split("/images/")[1];
+        fs.unlink(`images/${filename}`, () => {
+          Book.updateOne(
+            { _id: req.params.id },
+            { ...bookObj, _id: req.params.id }
           )
-          .catch((error) => res.status(401).json({ error }));
+            .then(() =>
+              res.status(200).json({ message: "Book updated successfully" })
+            )
+            .catch((error) => res.status(401).json({ error }));
+        });
       }
     })
     .catch((error) => {
