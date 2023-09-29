@@ -91,7 +91,7 @@ components:
                 minimum: 0
                 maximum: 5
         averageRating:
-          type: "number"
+          type: "integer"
     ResMessage:
       type: "object"
       properties:
