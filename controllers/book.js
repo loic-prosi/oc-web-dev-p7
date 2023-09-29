@@ -91,7 +91,7 @@ export const addBookRating = (req, res) => {
 };
 
 export const updateBook = (req, res) => {
-  const bookObj = req.file
+  const bookObj = res.locals.fileName
     ? {
         ...JSON.parse(req.body.book),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
@@ -106,17 +106,22 @@ export const updateBook = (req, res) => {
       if (book.userId !== req.auth.userId) {
         res.status(401).json({ message: "Not authorized" });
       } else {
-        const filename = book.imageUrl.split("/images/")[1];
-        fs.unlink(`images/${filename}`, () => {
-          Book.updateOne(
-            { _id: req.params.id },
-            { ...bookObj, _id: req.params.id }
+        if (res.locals.fileName) {
+          const filename = book.imageUrl.split("/images/")[1];
+          fs.unlink(`images/${filename}`, (error) => {
+            if (error) {
+              console.log(error);
+            }
+          });
+        }
+        Book.updateOne(
+          { _id: req.params.id },
+          { ...bookObj, _id: req.params.id }
+        )
+          .then(() =>
+            res.status(200).json({ message: "Book updated successfully" })
           )
-            .then(() =>
-              res.status(200).json({ message: "Book updated successfully" })
-            )
-            .catch((error) => res.status(401).json({ error }));
-        });
+          .catch((error) => res.status(401).json({ error }));
       }
     })
     .catch((error) => {
