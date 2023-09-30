@@ -43,13 +43,7 @@ export const getBestRatedBooks = (req, res) => {
 
 export const createBook = (req, res) => {
   const bookObj = JSON.parse(req.body.book);
-
-  delete bookObj._id;
-  delete bookObj._userId;
-
-  if (bookObj && !bookObj.averageRating) {
-    bookObj.averageRating = parseInt(bookObj.ratings[0].grade, 10);
-  }
+  bookObj.ratings[0].userId = req.auth.userId;
 
   const book = new Book({
     ...bookObj,
@@ -100,7 +94,6 @@ export const updateBook = (req, res) => {
       }
     : { ...req.body };
 
-  delete bookObj._userId;
   Book.findOne({ _id: req.params.id })
     .then((book) => {
       if (book.userId !== req.auth.userId) {
