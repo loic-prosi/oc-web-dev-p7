@@ -27,9 +27,19 @@ components:
       properties:
         book:
           type: "string"
+          example:
+            {
+              "userId": "1",
+              "title": "test",
+              "author": "test",
+              "year": "1903",
+              "genre": "test",
+              "ratings": [{ "userId": "1", "grade": 5 }],
+              "averageRating": 5
+            }
         image:
           type: "string"
-          format: "image file"
+          format: binary
       required:
         - "book"
         - "image"
@@ -38,14 +48,19 @@ components:
       properties:
         title:
           type: "string"
+          example: "Foundation"
         author:
           type: "string"
+          example: "Isaac Asimov"
         year:
           type: "integer"
+          example: 1951
         genre:
           type: "string"
+          example: "Test"
         rating:
           type: "integer"
+          example: 5
           minimum: 0
           maximum: 5
       required:
@@ -246,12 +261,9 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/ReqBook"
-            example:
-              book: "{'title':'Foundation','author':'Isaac Asimov','year':1951,'genre':'Science fiction','rating':5}"
-              image: "image file"
       responses:
         "201":
           description: "Created"
@@ -260,7 +272,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResMessage"
               example:
-                message: "book created successfully"
+                message: "Book created successfully"
         "400":
           description: "Bad request"
         "401":
@@ -317,21 +329,12 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/ReqBook"
-            examples:
-              image:
-                value:
-                  book: "{'title':'Foundation','author':'Isaac Asimov','year':1951,'genre':'Science fiction','rating':5}"
-                  image: "image file"
-              no image:
-                value:
-                  title: "Foundation"
-                  author: "Isaac Asimov"
-                  year: 1951
-                  genre: "Science fiction"
-                  rating: 5
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReqBookNoImage"
       responses:
         "200":
           description: "OK"
