@@ -11,7 +11,7 @@ const app = express();
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_LOCATION}/?retryWrites=true&w=majority`
+    `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_LOCATION}/oc-web-dev-p7?retryWrites=true&w=majority`
   )
   .then(() => console.log("MongoDB connexion OK"))
   .catch((error) => console.log("MongoDB connection error: ", error));
