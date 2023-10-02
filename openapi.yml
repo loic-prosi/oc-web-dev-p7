@@ -17,8 +17,10 @@ components:
       properties:
         email:
           type: "string"
+          example: "test@email.com"
         password:
           type: "string"
+          example: "test"
       required:
         - "email"
         - "password"
@@ -124,9 +126,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ReqAuth"
-            example:
-              email: "name@email.com"
-              password: "h69fj-4ir_$c"
       responses:
         "201":
           description: "Created"
@@ -147,9 +146,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ReqAuth"
-            example:
-              email: "name@email.com"
-              password: "h69fj-4ir_$c"
       responses:
         "200":
           description: "OK"
