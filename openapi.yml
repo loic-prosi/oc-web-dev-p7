@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               example:
-                message: "User created with success"
+                message: "User created successfully"
         "400":
           description: "Bad Request"
   /auth/login:
