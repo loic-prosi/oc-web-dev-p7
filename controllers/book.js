@@ -8,7 +8,7 @@ export const getAllBooks = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error
+        error
       });
     });
 };
@@ -22,7 +22,7 @@ export const getOneBook = (req, res) => {
     })
     .catch((error) => {
       res.status(404).json({
-        error: error
+        error
       });
     });
 };
@@ -36,7 +36,7 @@ export const getBestRatedBooks = (req, res) => {
     })
     .catch((error) => {
       res.status(400).json({
-        error: error
+        error
       });
     });
 };
