@@ -68,11 +68,14 @@ export const addBookRating = (req, res) => {
     _id: req.params.id
   })
     .then((book) => {
-      book.ratings.push(ratingObj);
       let totalRatings = 0;
       for (let rating of book.ratings) {
+        if (rating.userId === ratingObj.userId) {
+          return res.status(403).json({ message: "Unauthorized request" });
+        }
         totalRatings = totalRatings + rating.grade;
       }
+      book.ratings.push(ratingObj);
       book.averageRating = Math.round(totalRatings / book.ratings.length);
       book
         .save()
