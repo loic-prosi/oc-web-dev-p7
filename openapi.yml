@@ -178,7 +178,6 @@ paths:
               schema:
                 type: "array"
                 items:
-                  type: "object"
                   $ref: "#/components/schemas/ResBook"
               example:
                 - userId: "1"
@@ -455,7 +454,6 @@ paths:
               schema:
                 type: "array"
                 items:
-                  type: "object"
                   $ref: "#/components/schemas/ResBook"
               example:
                 - userId: "3"
