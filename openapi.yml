@@ -133,7 +133,8 @@ paths:
             application/json:
               example:
                 message: "User created successfully"
-
+        "400":
+          description: "Bad request"
         "500":
           description: "Internal Server Error"
   /auth/login:
@@ -433,6 +434,8 @@ paths:
                   - userId: "3"
                     grade: 4
                 averageRating: 4
+        "400":
+          description: "Bad request"
         "401":
           description: "Unauthorized"
         "403":
