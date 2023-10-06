@@ -8,15 +8,19 @@ Book rating API.
 npm install
 ```
 
+## Launch (development)
+
 ```
 npm start
 ```
 
-To launch the API in production mode (make the errors less verbose in the client) :
+## Launch (production)
 
 ```
 npm run prod
 ```
+
+Production mode make the API errors less verbose in the client.
 
 ## Test accounts
 
