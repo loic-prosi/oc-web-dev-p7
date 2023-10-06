@@ -1,8 +1,8 @@
 # oc-web-dev-p7
 
-Back-end d'un site de notation de livres.
+Book rating API.
 
-## Installation
+## Setup
 
 ```
 npm install
@@ -12,16 +12,16 @@ npm install
 npm start
 ```
 
-Lancer l'API en mode production (cache les logs du serveur pour les erreurs 500) :
+To launch the API in production mode (make the errors less verbose in the client) :
 
 ```
 npm run prod
 ```
 
-## Comptes de test
+## Test accounts
 
 - test@email.com
 - test2@email.com
 - test3@email.com
 
-Ces comptes partagent le même mot de passe : **test**.
+They share the same password : **test**.
