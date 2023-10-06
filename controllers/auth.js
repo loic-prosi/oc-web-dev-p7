@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 import User from "../models/user.js";
 
-import { validateFields } from "../utils/validation.js";
+import { validate } from "../utils/validation.js";
 
 const userSchema = {
   email: { type: "string" },
@@ -14,7 +14,7 @@ export const signup = async (req, res, next) => {
   try {
     const userObj = { email: req.body.email, password: req.body.password };
 
-    const error = validateFields(userObj, userSchema);
+    const error = validate(userObj, userSchema);
     if (error) {
       return res.status(400).json(error);
     }

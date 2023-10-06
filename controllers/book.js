@@ -1,6 +1,6 @@
 import Book from "../models/book.js";
 
-import { isFileValid, validateFields } from "../utils/validation.js";
+import { isFileValid, validate } from "../utils/validation.js";
 import { optimizeImage, deleteImage } from "../utils/image.js";
 
 const bookSchema = {
@@ -63,7 +63,7 @@ export const createBook = async (req, res, next) => {
   try {
     let bookObj = JSON.parse(req.body.book);
 
-    const error = validateFields(bookObj, bookSchema);
+    const error = validate(bookObj, bookSchema);
     if (error) {
       return res.status(400).json(error);
     }
@@ -99,7 +99,7 @@ export const addBookRating = async (req, res, next) => {
   try {
     const ratingObj = { userId: req.auth.userId, grade: req.body.rating };
 
-    const error = validateFields(ratingObj, bookSchema.ratings);
+    const error = validate(ratingObj, bookSchema.ratings);
     if (error) {
       return res.status(400).json(error);
     }
@@ -140,7 +140,7 @@ export const updateBook = async (req, res, next) => {
       bookObj = JSON.parse(req.body.book);
     }
 
-    const error = validateFields(bookObj, bookSchema);
+    const error = validate(bookObj, bookSchema);
     if (error) {
       return res.status(400).json(error);
     }

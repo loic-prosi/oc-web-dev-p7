@@ -28,7 +28,7 @@ export const isFileValid = (file) => {
   return false;
 };
 
-export const validateFields = (object, schema) => {
+export const validate = (object, schema) => {
   for (let key in object) {
     const isInSchema = Object.keys(schema).includes(key);
     if (isInSchema) {
@@ -38,7 +38,7 @@ export const validateFields = (object, schema) => {
       if (isArray(objectValue)) {
         const array = objectValue;
         for (let element of array) {
-          const error = validateFields(element, schemaValue);
+          const error = validate(element, schemaValue);
           if (error) {
             return error;
           }
